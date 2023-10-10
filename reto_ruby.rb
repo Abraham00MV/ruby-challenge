@@ -1,78 +1,58 @@
 # reto_ruby
 
-#entrada de valores
-puts "Digite la precipitacion : "
-precipitacion = gets.chomp.to_f
+CLASSIFICATION = ["Highly suitable", "Moderately suitable", "Marginally suitable", "Unsuitable"]
 
-puts "Digite profundidad efectiva : "
-profundidad_efectiva = gets.chomp.to_f
+#input values 
+puts " Enter the precipitation : "
+precipitation = gets.chomp.to_f
 
-#rangos de precipitacion y profundidad
-case 
-when (0..9.83).include?(profundidad_efectiva)
-    profundidad_no_apta=true
-when (9.84..19.68).include?(profundidad_efectiva)
-    profundidad_marginalmente_apta=true
-when (19.69..39.37).include?(profundidad_efectiva)
-    profundidad_moderada_apta=true
-when profundidad_efectiva > 39.37
-    profundidad_apta = true
-end
+puts "Enter the depth : "
+depth = gets.chomp.to_f
 
-case 
-when precipitacion < 4.0 || precipitacion > 12.5
-    precipitacion_no_apta = true
-when (10.5..12.5).include?(precipitacion) || (4.0..4.99).include?(precipitacion)
-    precipitacion_marginalmente_apta= true
-when (8.5..10.4).include?(precipitacion)|| (5.0..5.9).include?(precipitacion)
-    precipitacion_moderada_apta = true
-when (6.0..8.4).include?(precipitacion)
-    precipitacion_apta =true
-end
+#depth & precipitation ranges
 
-#Misma clasificacion
+unsuitable_depth = (0..9.83).include?(depth)
+marginal_depth = (9.84..19.68).include?(depth)
+moderate_depth = (19.69..39.37).include?(depth)
+suitable_depth = depth > 39.37 
 
-puts "Sumamente apto" if precipitacion_apta && profundidad_apta 
+unsuitable_precipitation = precipitation < 4.0 || precipitation > 12.5
+marginal_precipitation = (10.5..12.5).include?(precipitation) || (4.0..4.99).include?(precipitation)
+moderate_precipitation = (8.5..10.4).include?(precipitation)|| (5.0..5.9).include?(precipitation)
+suitable_precipitation = (6.0..8.4).include?(precipitation) 
 
-puts "Moderadamente apto" if precipitacion_moderada_apta && profundidad_moderada_apta
+# Equal classification
+puts CLASSIFICATION[0] if suitable_precipitation && suitable_depth 
+puts CLASSIFICATION[1] if moderate_precipitation && moderate_depth
+puts CLASSIFICATION[2] if marginal_precipitation && marginal_depth
+puts CLASSIFICATION[3] if unsuitable_precipitation && unsuitable_depth
 
-puts "Marginalmente apto" if precipitacion_marginalmente_apta && profundidad_marginalmente_apta
+#Different classification ( it takes the worst classification )
 
-puts "No apto" if precipitacion_no_apta && profundidad_no_apta
+# since depth :
 
+#suitable depth comparison :
+puts CLASSIFICATION[1] if suitable_depth && moderate_precipitation
+puts CLASSIFICATION[2] if suitable_depth && marginal_precipitation
+puts CLASSIFICATION[3] if suitable_depth && unsuitable_precipitation
 
-#Diferente clasificacion ( de las dos se toma la peor clasificacion )
+#moderate depth comparison :
+puts CLASSIFICATION[2]   if moderate_depth && marginal_precipitation
+puts CLASSIFICATION[3]   if moderate_depth && unsuitable_precipitation
 
-# desde profundidad :
+#marginal depth comparison :
+puts CLASSIFICATION[3] if marginal_depth && unsuitable_precipitation
 
-#profundidad apta :
-puts "Moderadamente apto" if profundidad_apta && precipitacion_moderada_apta
+#since precipitation : 
 
-puts "Marginalmente apto" if profundidad_apta && precipitacion_marginalmente_apta
+#suitable precipitation comparison :
+puts CLASSIFICATION[1] if suitable_precipitation && moderate_depth
+puts CLASSIFICATION[2] if suitable_precipitation && marginal_depth
+puts CLASSIFICATION[3] if suitable_precipitation && unsuitable_depth
 
-puts "No apto" if profundidad_apta && precipitacion_no_apta
+#moderate precipitation comparison :
+puts CLASSIFICATION[2] if moderate_precipitation && marginal_depth
+puts CLASSIFICATION[3] if moderate_precipitation && unsuitable_depth
 
-#profundidad moderada:
-puts "Marginalmente apto" if profundidad_moderada_apta && precipitacion_marginalmente_apta
-puts "No apto" if profundidad_moderada_apta && precipitacion_no_apta
-
-#profundidad marginalmente apta :
-puts "No apto" if profundidad_marginalmente_apta && precipitacion_no_apta
-
-
-
-#Desde precipitacion : 
-
-#Precipitacion apta :
-puts "Moderadamente apto" if precipitacion_apta && profundidad_moderada_apta
-
-puts "Marginalmente apto" if precipitacion_apta && profundidad_marginalmente_apta
-
-puts "No apto" if precipitacion_apta && profundidad_no_apta
-
-#Precipitacion moderada:
-puts "Marginalmente apto" if precipitacion_moderada_apta && profundidad_marginalmente_apta
-puts "No apto" if precipitacion_moderada_apta && profundidad_marginalmente_apta
-
-#Precipitacion marginalmente apta :
-puts "No apto" if precipitacion_marginalmente_apta && profundidad_no_apta
+#marginal precipitation comparison :
+puts CLASSIFICATION[3]   if marginal_precipitation && unsuitable_depth
